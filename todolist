@@ -1,0 +1,105 @@
+// TODO: 使用者可以新增待辦事項
+const addNewTodo = () => {
+  <img src="./images/add.svg" alt="Create Todo"></img>
+// 檢查 input 有沒有值
+  const value = $('#todo').val()
+// 插入資料
+  $('.todolist__item').append(`<li class="no-completed">
+    <input class="todolist__input" type="checkbox" />
+    <span _msthash="1620073" _msttexthash="17916795">${value}</span>
+    <a class="delete" href="#">
+      <i class="fa fa-x" aria-hidden="true"></i>
+    </a>
+  </li>`)
+
+  // 清除代辦
+  $('#todo').val('')
+
+}
+
+// 監聽
+{
+  $() 
+    // TODO: 每一條代辦事項 delete 監聽 click 事件
+    $('.todolist__item').on('click', '.delete', (e) => deleteTodo(e))
+
+// TODO: 使用者可以刪除待辦事項
+const deleteTodo = (e) => {
+    console.log(e);
+  $(e.target).parent().closest('li').remove()
+}
+
+// TODO: 使用者可以將待辦事項設定成已完成
+  // 步驟一：監聽每一個 todo list，前面 checkbox 有被點擊時執行 Function
+  // 步驟二：每條待辦事項根據條件，加上不同的 class：completed, no-complete
+
+  $('.todolist__item li').on('click', 'input', (e) => {
+    const li = $(e.target).parent()
+  
+    if (li.hasClass('completed')) {
+      li.removeClass('completed')
+      li.addClass('no-completed')
+    } else {
+      li.removeClass('no-completed')
+      li.addClass('completed')
+    }
+  // 更新已完成項目
+  const count = $('.todolist__item').find('.completed').length
+  $('.todolist__info').find('a').text(count)
+
+    })
+
+  // .todolist__item input:checked 表示當 checkbox被打勾時，我隔壁的 span (文字) 請幫我做一些事
+  // css 會加上刪除線的效果 text-decoration: line-through;
+
+  /*  .todolist__table .todolist__item input:checked + span {
+    text-decoration: line-through;
+    color: #e5e5e5;
+} 
+*/
+
+
+// TODO: 清除已完成項目
+const clearCompletedTodo = () => {
+  $('.todolist__item').find('.completed').fadeOut(500, () => {
+    // 找到 completed 的待辦事項，並移除 .completed class
+    $('.todolist__item').find('.completed').remove()
+
+    // 更新已完成項目
+    // 抓出 .todolist__item 待辦事項的 .completed class 數量
+    // 用 jQuery text() 方式更新 html 已完成 [數字] 項目
+    const count = $('.todolist__item').find('.completed').length
+    $('.todolist__info').find('a').text(count)
+
+  })
+
+}
+
+
+
+  // 狀態：全部、待完成、已完成
+  $('.todolist__tabs li').each(function () {
+    $(this).click(function () {
+      $(this).siblings().find('a').removeClass('active')
+      $(this).find('a').addClass('active')
+    })
+  })
+
+ 
+  // 篩選全部
+  $('.todolist__tabs').on('click', '.all', () => {
+    $('.todolist__item').children().show()
+  })
+
+  // TODO: 篩選待完成
+  $('.todolist__tabs').on('click', '.no-completed', () => {
+    $('.todolist__item').find('.completed').hide()
+    $('.todolist__item').find('.no-completed').show()
+  })
+  
+  // TODO: 篩選已完成
+  $('.todolist__tabs').on('click', '.completed', () => {
+    $('.todolist__item').find('.completed').show()
+    $('.todolist__item').find('.no-completed').hide()
+  })
+}
